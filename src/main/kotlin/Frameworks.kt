@@ -1,5 +1,8 @@
 package com.example
 
+import com.example.com.whereto.app.controllers.EventController
+import com.example.com.whereto.app.repositories.EventRepository
+import com.example.com.whereto.app.services.EventService
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
@@ -18,6 +21,10 @@ fun Application.configureFrameworks() {
                     println(environment.log.info("Hello, World!"))
                 }
             }
+
+            single { EventRepository() }
+            single { EventService(get()) }
+            single { EventController(get()) }
         })
     }
 }
