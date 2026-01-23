@@ -1,4 +1,4 @@
-package com.example.db.tables
+package com.whereto.db.tables
 
 import org.jetbrains.exposed.v1.core.Table
 import org.jetbrains.exposed.v1.datetime.datetime

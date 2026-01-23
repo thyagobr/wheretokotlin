@@ -1,6 +1,6 @@
-package com.example
+package com.whereto
 
-import com.example.db.DatabaseFactory
+import com.whereto.db.DatabaseFactory
 import io.ktor.server.application.*
 
 fun main(args: Array<String>) {

@@ -1,8 +1,7 @@
-package com.example.com.whereto.app.repositories
+package com.whereto.app.repositories
 
-import com.example.db.tables.Events
-import com.example.com.whereto.app.domain.Event
-import org.jetbrains.exposed.v1.jdbc.select
+import com.whereto.db.tables.Events
+import com.whereto.app.domain.Event
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.jetbrains.exposed.v1.core.eq

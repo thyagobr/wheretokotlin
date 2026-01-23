@@ -1,7 +1,7 @@
-package com.example.com.whereto.app.services
+package com.whereto.app.services
 
-import com.example.com.whereto.app.domain.Event
-import com.example.com.whereto.app.repositories.EventRepository
+import com.whereto.app.domain.Event
+import com.whereto.app.repositories.EventRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

@@ -1,4 +1,4 @@
-package com.example.utils
+package com.whereto.utils
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.encoding.Decoder

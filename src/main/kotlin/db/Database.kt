@@ -1,4 +1,4 @@
-package com.example.db
+package com.whereto.db
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource

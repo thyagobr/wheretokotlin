@@ -1,4 +1,4 @@
-package com.example.com.whereto.app.routing
+package com.whereto.app.routing
 
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.Route

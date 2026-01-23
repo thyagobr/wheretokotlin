@@ -1,6 +1,6 @@
-package com.example.com.whereto.app.domain
+package com.whereto.app.domain
 
-import com.example.utils.LocalDateTimeSerializer
+import com.whereto.utils.LocalDateTimeSerializer
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 

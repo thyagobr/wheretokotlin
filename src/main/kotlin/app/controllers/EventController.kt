@@ -1,6 +1,7 @@
-package com.example.com.whereto.app.controllers
+package com.whereto.app.controllers
 
-import com.example.com.whereto.app.services.EventService
+import com.whereto.app.services.EventService
+import io.ktor.http.HttpStatusCode
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.Route
@@ -20,7 +21,7 @@ class EventController(private val service: EventService) {
                 if (event != null) {
                     call.respond(event)
                 } else {
-                    call.respondText("Event not found", status = io.ktor.http.HttpStatusCode.NotFound)
+                    call.respondText("Event not found", status = HttpStatusCode.NotFound)
                 }
             }
         }
