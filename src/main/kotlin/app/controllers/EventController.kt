@@ -1,5 +1,7 @@
 package com.whereto.app.controllers
 
+import com.whereto.app.dtos.ApiResponse
+import com.whereto.app.dtos.EventResponse
 import com.whereto.app.services.EventService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.response.respond
@@ -12,7 +14,11 @@ class EventController(private val service: EventService) {
     fun registerRoutes(route: Route) {
         route.route("/events") {
             get {
-                call.respond(service.getAllEvents())
+                call.respond(
+                    ApiResponse(
+                        data = EventResponse(service.getAllEvents())
+                    )
+                )
             }
 
             get("/{id}") {

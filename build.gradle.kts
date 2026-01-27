@@ -16,6 +16,7 @@ dependencies {
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.koin.ktor)
+    implementation("io.ktor:ktor-server-cors")
     implementation(libs.koin.logger.slf4j)
     implementation(libs.ktor.server.netty)
     implementation(libs.logback.classic)
