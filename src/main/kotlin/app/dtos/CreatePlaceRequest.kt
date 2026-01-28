@@ -1,14 +1,11 @@
-package com.whereto.app.domain
+package com.whereto.app.dtos
 
-import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Place(
-    val id: Int? = null,
+data class CreatePlaceRequest(
     val name: String,
     val address: String,
     val city: String,
     val country: String
-    val createdAt: LocalDateTime = Clock
 )
