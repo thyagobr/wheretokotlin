@@ -8,6 +8,7 @@ import com.whereto.app.repositories.PlaceRespository
 import com.whereto.app.repositories.UserRepository
 import com.whereto.app.services.EventService
 import com.whereto.app.services.PlaceService
+import com.whereto.app.services.PlaceServiceImpl
 import com.whereto.app.services.SessionService
 import io.ktor.server.application.*
 import org.koin.dsl.module
@@ -29,7 +30,7 @@ fun Application.configureFrameworks() {
             single { EventController(get()) }
 
             single { PlaceRespository() }
-            single { PlaceService(get()) }
+            single<PlaceService> { PlaceServiceImpl(get()) }
             single { PlaceController(get()) }
 
             single { UserRepository() }

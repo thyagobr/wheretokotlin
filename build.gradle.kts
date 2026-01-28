@@ -35,4 +35,6 @@ dependencies {
 
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
+    testImplementation("io.ktor:ktor-client-content-negotiation")
+    testImplementation("io.ktor:ktor-serialization-kotlinx-json")
 }
