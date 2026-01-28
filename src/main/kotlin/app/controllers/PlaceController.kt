@@ -1,9 +1,10 @@
 package com.whereto.app.controllers
 
-import com.whereto.app.domain.Place
 import com.whereto.app.dtos.ApiResponse
 import com.whereto.app.dtos.CreatePlaceRequest
-import com.whereto.app.dtos.PlacesResponse
+import com.whereto.app.dtos.MultiplePlacesResponse
+import com.whereto.app.dtos.SinglePlaceResponse
+import com.whereto.app.dtos.toPlaceResponse
 import com.whereto.app.services.PlaceService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.request.receive
@@ -17,18 +18,25 @@ class PlaceController(private val service: PlaceService) {
     fun registerRoutes(route: Route) {
         route.route("/places") {
             get {
+                val places = service.getAllPlaces()
+                val placeResponses = places.map { it.toPlaceResponse() }
                 call.respond(
-                    ApiResponse<PlacesResponse>(
-                        data = (PlacesResponse(service.getAllPlaces()))
+                    ApiResponse(
+                        data = MultiplePlacesResponse(places = placeResponses)
                     )
                 )
             }
 
             post {
-                val placeParams = call.receive< CreatePlaceRequest>()
+                val placeParams = call.receive<CreatePlaceRequest>()
                 val createdPlace = service.createPlace(placeParams)
-                println("Place created: $createdPlace")
-                call.respond(HttpStatusCode.Created, mapOf("data" to mapOf("place" to createdPlace)))
+                val placeResponse = createdPlace.toPlaceResponse()
+                call.respond(
+                    HttpStatusCode.Created,
+                    ApiResponse(
+                        data = SinglePlaceResponse(place = placeResponse)
+                    )
+                )
             }
         }
     }

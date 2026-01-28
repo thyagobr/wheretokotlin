@@ -1,5 +1,6 @@
 package com.whereto.app.domain
 
+import com.whereto.utils.LocalDateTimeSerializer
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
@@ -9,6 +10,9 @@ data class Place(
     val name: String,
     val address: String,
     val city: String,
-    val country: String
-    val createdAt: LocalDateTime = Clock
+    val country: String,
+    @Serializable(with = LocalDateTimeSerializer::class)
+    val createdAt: LocalDateTime? = null,
+    @Serializable(with = LocalDateTimeSerializer::class)
+    val updatedAt: LocalDateTime? = null
 )
