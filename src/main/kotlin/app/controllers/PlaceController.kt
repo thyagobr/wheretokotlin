@@ -11,6 +11,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
+import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
@@ -60,6 +61,14 @@ class PlaceController(private val service: PlaceService) {
                         data = SinglePlaceResponse(place = place.toPlaceResponse())
                     )
                 )
+            }
+
+            delete("{id}") {
+                val id = call.parameters["id"]?.toIntOrNull() ?: return@delete call.respond(HttpStatusCode.BadRequest)
+                when (service.deletePlace(id)) {
+                    true -> call.respond(HttpStatusCode.OK)
+                    false -> call.respond(HttpStatusCode.NotFound)
+                }
             }
         }
     }

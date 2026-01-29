@@ -52,4 +52,12 @@ class PlaceServiceImpl(private val repository: PlaceRepository): PlaceService {
 
         return place
     }
+
+    override suspend fun deletePlace(id: Int): Boolean {
+        val result = withContext(Dispatchers.IO) {
+            repository.delete(id)
+        }
+
+        return result
+    }
 }

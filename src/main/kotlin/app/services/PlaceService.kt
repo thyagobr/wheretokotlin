@@ -9,4 +9,5 @@ interface PlaceService {
     suspend fun getPlaceById(id: Int): Place?
     suspend fun createPlace(placeParams: CreatePlaceRequest): Place
     suspend fun updatePlace(id: Int, placeParams: UpdatePlaceRequest): Place
+    suspend fun deletePlace(id: Int): Boolean
 }

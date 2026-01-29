@@ -2,10 +2,12 @@ package com.whereto.app.repositories
 
 import com.whereto.app.domain.Place
 import com.whereto.db.tables.Places
+import io.ktor.server.plugins.NotFoundException
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.deleteWhere
 import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
@@ -71,5 +73,9 @@ class PlaceRepository {
         }
 
         place.copy(updatedAt = now)
+    }
+
+    fun delete(id: Int): Boolean = transaction{
+        (Places.deleteWhere { Places.id eq id } > 0)
     }
 }

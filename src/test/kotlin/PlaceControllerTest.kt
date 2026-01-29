@@ -6,6 +6,7 @@ import com.whereto.app.dtos.CreatePlaceRequest
 import com.whereto.app.dtos.UpdatePlaceRequest
 import com.whereto.app.services.PlaceService
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.put
@@ -49,7 +50,7 @@ class FakePlaceService : PlaceService {
 
     override suspend fun getAllPlaces(): List<Place> = places
 
-    override suspend fun getPlaceById(id: Int): Place = places.find { it.id == id }!!
+    override suspend fun getPlaceById(id: Int): Place? = places.find { it.id == id }
 
     override suspend fun createPlace(placeParams: CreatePlaceRequest): Place {
         val place = Place(
@@ -77,6 +78,10 @@ class FakePlaceService : PlaceService {
         )
         places[index] = newPlace
         return newPlace
+    }
+
+    override suspend fun deletePlace(id: Int): Boolean {
+        return places.removeIf { it.id == id }
     }
 }
 
@@ -188,5 +193,30 @@ class PlaceControllerTest {
         assertEquals(HttpStatusCode.OK, response.status)
         assertTrue(response.bodyAsText().contains("Space Meduza"))
         assertTrue(response.bodyAsText().contains("Main St"))
+    }
+
+    @Test
+    fun `DELETE place deletes a place`() = testApplication {
+        val fakeService = FakePlaceService()
+        val controller = PlaceController(fakeService)
+
+        application {
+            configureSerialization()
+
+            routing {
+                controller.registerRoutes(this)
+            }
+        }
+
+        val checkExistingResponse = client.get("/places/1")
+        assertEquals(HttpStatusCode.OK, checkExistingResponse.status)
+        assertTrue(checkExistingResponse.bodyAsText().contains("Cafe"))
+
+        val response = client.delete("/places/1")
+
+        assertEquals(HttpStatusCode.OK, response.status)
+
+        val confirmingResponse = client.get("/places/1")
+        assertEquals(HttpStatusCode.NotFound, confirmingResponse.status)
     }
 }
