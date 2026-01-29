@@ -4,6 +4,7 @@ import com.whereto.app.dtos.ApiResponse
 import com.whereto.app.dtos.CreatePlaceRequest
 import com.whereto.app.dtos.MultiplePlacesResponse
 import com.whereto.app.dtos.SinglePlaceResponse
+import com.whereto.app.dtos.UpdatePlaceRequest
 import com.whereto.app.dtos.toPlaceResponse
 import com.whereto.app.services.PlaceService
 import io.ktor.http.HttpStatusCode
@@ -12,6 +13,7 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
+import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 
 class PlaceController(private val service: PlaceService) {
@@ -45,6 +47,17 @@ class PlaceController(private val service: PlaceService) {
                     HttpStatusCode.Created,
                     ApiResponse(
                         data = SinglePlaceResponse(place = placeResponse)
+                    )
+                )
+            }
+
+            put("{id}") {
+                val id = call.parameters["id"]?.toIntOrNull() ?: return@put call.respond(HttpStatusCode.BadRequest)
+                val placeParams = call.receive<UpdatePlaceRequest>()
+                val place = service.updatePlace(id, placeParams)
+                call.respond(
+                    ApiResponse(
+                        data = SinglePlaceResponse(place = place.toPlaceResponse())
                     )
                 )
             }

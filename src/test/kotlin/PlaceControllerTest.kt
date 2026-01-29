@@ -3,10 +3,12 @@ package com.whereto
 import com.whereto.app.controllers.PlaceController
 import com.whereto.app.domain.Place
 import com.whereto.app.dtos.CreatePlaceRequest
+import com.whereto.app.dtos.UpdatePlaceRequest
 import com.whereto.app.services.PlaceService
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
@@ -61,6 +63,20 @@ class FakePlaceService : PlaceService {
         )
         places.add(place)
         return place
+    }
+
+    override suspend fun updatePlace(id: Int, placeParams: UpdatePlaceRequest): Place {
+        val place = places.find { it.id == id }!!
+        val index = places.indexOfFirst { it.id == place.id }
+        val newPlace = place.copy(
+            name = placeParams.name ?: place.name,
+            address = placeParams.address ?: place.address,
+            city = placeParams.city ?: place.city,
+            country = placeParams.country ?: place.country,
+            updatedAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        )
+        places[index] = newPlace
+        return newPlace
     }
 }
 
@@ -139,5 +155,38 @@ class PlaceControllerTest {
         assertEquals(HttpStatusCode.Created, response.status)
         assertTrue(response.bodyAsText().contains("Space Medduza"))
         println(response.bodyAsText())
+    }
+
+    @Test
+    fun `PUT place creates a new place`() = testApplication {
+        val fakeService = FakePlaceService()
+        val controller = PlaceController(fakeService)
+
+        application {
+            configureSerialization()
+
+            routing {
+                controller.registerRoutes(this)
+            }
+        }
+
+        val testClient = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+
+        val placeToUpdate = UpdatePlaceRequest(
+            name = "Space Meduza"
+        )
+
+        val response = testClient.put("/places/1") {
+            contentType(ContentType.Application.Json)
+            setBody(placeToUpdate)
+        }
+
+        assertEquals(HttpStatusCode.OK, response.status)
+        assertTrue(response.bodyAsText().contains("Space Meduza"))
+        assertTrue(response.bodyAsText().contains("Main St"))
     }
 }

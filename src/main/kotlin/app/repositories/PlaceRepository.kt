@@ -9,6 +9,7 @@ import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.update
 
 class PlaceRepository {
     fun findAll(): List<Place> = transaction {
@@ -57,5 +58,18 @@ class PlaceRepository {
             createdAt = now,
             updatedAt = now
         )
+    }
+
+    fun update(place: Place): Place = transaction {
+        val now = Clock.System.now().toLocalDateTime(TimeZone.UTC)
+        Places.update({ Places.id eq place.id }) {
+            it[name] = place.name
+            it[address] = place.address
+            it[city] = place.city
+            it[country] = place.country
+            it[updatedAt] = now
+        }
+
+        place.copy(updatedAt = now)
     }
 }
