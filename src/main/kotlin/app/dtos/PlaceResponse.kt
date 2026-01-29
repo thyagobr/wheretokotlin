@@ -23,7 +23,8 @@ fun Place.toPlaceResponse(): PlaceResponse {
         name = name,
         address = address,
         city = city,
-        country = country
+        country = country,
+        tags = tags,
     )
 }
 
