@@ -13,7 +13,8 @@ data class PlaceResponse(
     val name: String,
     val address: String,
     val city: String,
-    val country: String
+    val country: String,
+    val tags: List<String> = listOf(),
 )
 
 fun Place.toPlaceResponse(): PlaceResponse {
