@@ -2,17 +2,13 @@ package com.whereto.app.repositories
 
 import com.whereto.app.domain.Place
 import com.whereto.app.domain.Tag
-import com.whereto.app.domain.TaggableType
+import com.whereto.app.dtos.TagResponse
 import com.whereto.db.tables.Places
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import com.whereto.app.repositories.TagRepository
-import com.whereto.db.tables.Tags
 import io.ktor.server.plugins.NotFoundException
-import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
-import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.jdbc.deleteWhere
 import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.selectAll
@@ -37,15 +33,15 @@ class PlaceRepository {
         val tagRepository = TagRepository()
         val placeIds = places.map { it.id!! }
         val tags: List<Tag> = tagRepository.findTagForPlaces(placeIds)
-        val tagsByPlaceId = tags.map { it.taggableId to it.text }.groupBy({ it.first }, { it.second })
+        val tagsByPlaceId: Map<Int, List<Tag>> = tags.groupBy { it.taggableId }
 
         places.map { place ->
             place.copy(tags = tagsByPlaceId[place.id!!] ?: emptyList())
         }
     }
 
-    fun findById(id: Int): Place? = transaction {
-        val place: Place? = Places.selectAll().where { Places.id eq id }.map { row ->
+    fun findById(id: Int): Place = transaction {
+        val place: Place = Places.selectAll().where { Places.id eq id }.map { row ->
             Place(
                 id = row[Places.id].value,
                 name = row[Places.name],
@@ -61,8 +57,8 @@ class PlaceRepository {
         val tagRepository: TagRepository = TagRepository()
         val tags = tagRepository.findTagsForPlace(id)
 
-        place?.copy(
-            tags = tags.map { it.text }
+        place.copy(
+            tags = tags
         )
     }
 

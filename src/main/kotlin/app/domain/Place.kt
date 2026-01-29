@@ -11,7 +11,7 @@ data class Place(
     val address: String,
     val city: String,
     val country: String,
-    val tags: List<String> = listOf(),
+    val tags: List<Tag> = listOf(),
     @Serializable(with = LocalDateTimeSerializer::class)
     val createdAt: LocalDateTime? = null,
     @Serializable(with = LocalDateTimeSerializer::class)

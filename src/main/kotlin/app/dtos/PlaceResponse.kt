@@ -1,6 +1,7 @@
 package com.whereto.app.dtos
 
 import com.whereto.app.domain.Place
+import com.whereto.app.domain.Tag
 import kotlinx.serialization.Serializable
 
 /**
@@ -14,7 +15,7 @@ data class PlaceResponse(
     val address: String,
     val city: String,
     val country: String,
-    val tags: List<String> = listOf(),
+    val tags: List<TagResponse> = listOf(),
 )
 
 fun Place.toPlaceResponse(): PlaceResponse {
@@ -24,7 +25,7 @@ fun Place.toPlaceResponse(): PlaceResponse {
         address = address,
         city = city,
         country = country,
-        tags = tags,
+        tags = tags.map { it.toTagResponse() },
     )
 }
 
