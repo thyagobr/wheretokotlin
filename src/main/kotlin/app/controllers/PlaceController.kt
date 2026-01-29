@@ -27,6 +27,16 @@ class PlaceController(private val service: PlaceService) {
                 )
             }
 
+            get("{id}") {
+                val id = call.parameters["id"]?.toIntOrNull() ?: return@get call.respond(HttpStatusCode.BadRequest)
+                val place = service.getPlaceById(id) ?: return@get call.respond(HttpStatusCode.NotFound)
+                call.respond(
+                    ApiResponse(
+                        data = SinglePlaceResponse(place.toPlaceResponse())
+                    )
+                )
+            }
+
             post {
                 val placeParams = call.receive<CreatePlaceRequest>()
                 val createdPlace = service.createPlace(placeParams)

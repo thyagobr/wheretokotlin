@@ -2,16 +2,25 @@ package com.whereto.app.services
 
 import com.whereto.app.domain.Place
 import com.whereto.app.dtos.CreatePlaceRequest
-import com.whereto.app.repositories.PlaceRespository
+import com.whereto.app.repositories.PlaceRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class PlaceServiceImpl(private val repository: PlaceRespository): PlaceService {
+class PlaceServiceImpl(private val repository: PlaceRepository): PlaceService {
 
     override suspend fun getAllPlaces(): List<Place> =
         withContext(Dispatchers.IO) {
             repository.findAll()
         }
+
+    override suspend fun getPlaceById(id: Int): Place? {
+
+        val place = withContext(Dispatchers.IO) {
+            repository.findById(id)
+        }
+
+        return place
+    }
 
     override suspend fun createPlace(placeParams: CreatePlaceRequest): Place {
         val createdPlace = withContext(Dispatchers.IO) {

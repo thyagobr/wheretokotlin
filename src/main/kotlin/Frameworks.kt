@@ -4,7 +4,7 @@ import com.whereto.app.controllers.EventController
 import com.whereto.app.controllers.PlaceController
 import com.whereto.app.controllers.SessionController
 import com.whereto.app.repositories.EventRepository
-import com.whereto.app.repositories.PlaceRespository
+import com.whereto.app.repositories.PlaceRepository
 import com.whereto.app.repositories.UserRepository
 import com.whereto.app.services.EventService
 import com.whereto.app.services.PlaceService
@@ -29,7 +29,7 @@ fun Application.configureFrameworks() {
             single { EventService(get()) }
             single { EventController(get()) }
 
-            single { PlaceRespository() }
+            single { PlaceRepository() }
             single<PlaceService> { PlaceServiceImpl(get()) }
             single { PlaceController(get()) }
 

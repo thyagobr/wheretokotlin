@@ -47,6 +47,8 @@ class FakePlaceService : PlaceService {
 
     override suspend fun getAllPlaces(): List<Place> = places
 
+    override suspend fun getPlaceById(id: Int): Place = places.find { it.id == id }!!
+
     override suspend fun createPlace(placeParams: CreatePlaceRequest): Place {
         val place = Place(
             id = places.size,
@@ -81,6 +83,25 @@ class PlaceControllerTest {
         assertEquals(HttpStatusCode.OK, response.status)
         assertTrue(response.bodyAsText().contains("Cafe"))
         println(response.bodyAsText())
+    }
+
+    @Test
+    fun `GET places by id returns correct place`() = testApplication {
+        val fakeService = FakePlaceService()
+        val controller = PlaceController(fakeService)
+
+        application {
+            configureSerialization()
+
+            routing {
+                controller.registerRoutes(this)
+            }
+        }
+
+        val response = client.get("/places/2")
+
+        assertEquals(HttpStatusCode.OK, response.status)
+        assertTrue(response.bodyAsText().contains("Park"))
     }
 
     @Test
