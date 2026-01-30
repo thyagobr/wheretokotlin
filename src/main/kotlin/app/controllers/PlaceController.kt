@@ -16,6 +16,7 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
+import io.ktor.server.auth.authenticate
 
 class PlaceController(private val service: PlaceService) {
     fun registerRoutes(route: Route) {
@@ -40,34 +41,37 @@ class PlaceController(private val service: PlaceService) {
                 )
             }
 
-            post {
-                val placeParams = call.receive<CreatePlaceRequest>()
-                val createdPlace = service.createPlace(placeParams)
-                val placeResponse = createdPlace.toPlaceResponse()
-                call.respond(
-                    HttpStatusCode.Created,
-                    ApiResponse(
-                        data = SinglePlaceResponse(place = placeResponse)
+            // Protected routes: require Authorization: Bearer <token> header
+            authenticate("bearer") {
+                post {
+                    val placeParams = call.receive<CreatePlaceRequest>()
+                    val createdPlace = service.createPlace(placeParams)
+                    val placeResponse = createdPlace.toPlaceResponse()
+                    call.respond(
+                        HttpStatusCode.Created,
+                        ApiResponse(
+                            data = SinglePlaceResponse(place = placeResponse)
+                        )
                     )
-                )
-            }
+                }
 
-            put("{id}") {
-                val id = call.parameters["id"]?.toIntOrNull() ?: return@put call.respond(HttpStatusCode.BadRequest)
-                val placeParams = call.receive<UpdatePlaceRequest>()
-                val place = service.updatePlace(id, placeParams)
-                call.respond(
-                    ApiResponse(
-                        data = SinglePlaceResponse(place = place.toPlaceResponse())
+                put("{id}") {
+                    val id = call.parameters["id"]?.toIntOrNull() ?: return@put call.respond(HttpStatusCode.BadRequest)
+                    val placeParams = call.receive<UpdatePlaceRequest>()
+                    val place = service.updatePlace(id, placeParams)
+                    call.respond(
+                        ApiResponse(
+                            data = SinglePlaceResponse(place = place.toPlaceResponse())
+                        )
                     )
-                )
-            }
+                }
 
-            delete("{id}") {
-                val id = call.parameters["id"]?.toIntOrNull() ?: return@delete call.respond(HttpStatusCode.BadRequest)
-                when (service.deletePlace(id)) {
-                    true -> call.respond(HttpStatusCode.OK)
-                    false -> call.respond(HttpStatusCode.NotFound)
+                delete("{id}") {
+                    val id = call.parameters["id"]?.toIntOrNull() ?: return@delete call.respond(HttpStatusCode.BadRequest)
+                    when (service.deletePlace(id)) {
+                        true -> call.respond(HttpStatusCode.OK)
+                        false -> call.respond(HttpStatusCode.NotFound)
+                    }
                 }
             }
         }

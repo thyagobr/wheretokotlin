@@ -1,5 +1,6 @@
 package com.whereto.app.controllers
 
+import com.whereto.app.dtos.ApiResponse
 import com.whereto.app.dtos.LoginRequest
 import com.whereto.app.dtos.LoginResponse
 import com.whereto.app.services.SessionService
@@ -16,11 +17,10 @@ class SessionController(private val service: SessionService) {
         route.route("/auth/login") {
             post {
                 val request = call.receive<LoginRequest>()
-
                 val token = service.authenticate(request.email, request.password)
 
                 if (token != null) {
-                    call.respond(HttpStatusCode.OK, LoginResponse(token))
+                    call.respond(HttpStatusCode.OK, ApiResponse(LoginResponse(token)))
                 } else {
                     call.respond(HttpStatusCode.Forbidden)
                 }

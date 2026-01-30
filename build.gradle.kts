@@ -17,10 +17,12 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.koin.ktor)
     implementation("io.ktor:ktor-server-cors")
+    implementation("io.ktor:ktor-server-call-logging")
     implementation(libs.koin.logger.slf4j)
     implementation(libs.ktor.server.netty)
     implementation(libs.logback.classic)
     implementation(libs.ktor.server.config.yaml)
+    implementation(libs.ktor.server.auth)
 
     implementation("org.jetbrains.exposed:exposed-core:1.0.0")
     implementation("org.jetbrains.exposed:exposed-jdbc:1.0.0")
@@ -32,6 +34,7 @@ dependencies {
     implementation("com.zaxxer:HikariCP:5.1.0")
 
     implementation("org.mindrot:jbcrypt:0.4")
+    implementation("io.ktor:ktor-server-double-receive:3.3.3")
 
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)

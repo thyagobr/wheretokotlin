@@ -19,12 +19,6 @@ fun Application.configureFrameworks() {
     install(Koin) {
         slf4jLogger()
         modules(module {
-            single<HelloService> {
-                HelloService {
-                    println(environment.log.info("Hello, World!"))
-                }
-            }
-
             single { EventRepository() }
             single { EventService(get()) }
             single { EventController(get()) }
