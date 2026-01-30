@@ -12,11 +12,13 @@ import io.ktor.server.routing.route
 
 class EventController(private val service: EventService) {
     fun registerRoutes(route: Route) {
-        route.route("/events") {
+        route.route("/places/{id}/events") {
             get {
+                val id = call.parameters["id"]?.toIntOrNull() ?: return@get call.respond(HttpStatusCode.BadRequest)
+
                 call.respond(
                     ApiResponse(
-                        data = EventResponse(service.getAllEvents())
+                        data = EventResponse(service.getAllEventsForPlace(id))
                     )
                 )
             }

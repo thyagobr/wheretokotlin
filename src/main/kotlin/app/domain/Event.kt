@@ -8,6 +8,11 @@ import kotlinx.serialization.Serializable
 data class Event(
     val id: Int,
     val name: String,
+    val place: Int,
+    val description: String,
+    val link: String?,
+    val public: Boolean,
+    val userId: Int,
     @Serializable(with = LocalDateTimeSerializer::class)
     val startsAt: LocalDateTime,
     @Serializable(with = LocalDateTimeSerializer::class)

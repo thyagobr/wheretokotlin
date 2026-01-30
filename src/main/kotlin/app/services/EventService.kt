@@ -6,6 +6,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class EventService(private val repository: EventRepository) {
+    suspend fun getAllEventsForPlace(placeId: Int): List<Event> =
+        withContext(Dispatchers.IO) {
+            repository.findAllByPlaceId(placeId)
+        }
+
     suspend fun getAllEvents(): List<Event> =
         withContext(Dispatchers.IO) {
             repository.findAll()
