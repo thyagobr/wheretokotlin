@@ -45,7 +45,7 @@ class PlaceController(private val service: PlaceService) {
             authenticate("bearer") {
                 post {
                     val placeParams = call.receive<CreatePlaceRequest>()
-                    val createdPlace = service.createPlace(placeParams)
+                      val createdPlace = service.createPlace(placeParams)
                     val placeResponse = createdPlace.toPlaceResponse()
                     call.respond(
                         HttpStatusCode.Created,

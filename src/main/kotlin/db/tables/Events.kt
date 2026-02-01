@@ -6,10 +6,7 @@ import org.jetbrains.exposed.v1.datetime.datetime
 
 object Events : Table("events") {
     val id = integer("id").autoIncrement()
-    val place = reference(
-        name = "place_id",
-        foreign = Places,
-    )
+    val placeId = integer("place_id").references(Places.id)
     val name = varchar("name", 250)
     val description = varchar("description", 250)
     val link = varchar("link", 255).nullable()

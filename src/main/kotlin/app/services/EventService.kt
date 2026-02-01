@@ -20,4 +20,9 @@ class EventService(private val repository: EventRepository) {
         withContext(Dispatchers.IO) {
             repository.findById(id)
         }
+
+    suspend fun create(eventParams: EventRepository.CreateEventRequest): Event? =
+        withContext(Dispatchers.IO) {
+            repository.create(eventParams)
+        }
 }

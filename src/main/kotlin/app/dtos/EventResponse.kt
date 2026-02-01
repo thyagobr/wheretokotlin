@@ -7,3 +7,8 @@ import kotlinx.serialization.Serializable
 data class EventResponse(
     val events: List<Event>
 )
+
+@Serializable
+data class SingleEventResponse(
+    val event: Event
+)
