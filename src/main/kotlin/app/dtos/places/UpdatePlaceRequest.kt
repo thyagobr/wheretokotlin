@@ -1,4 +1,4 @@
-package com.whereto.app.dtos
+package com.whereto.app.dtos.places
 
 import kotlinx.serialization.Serializable
 

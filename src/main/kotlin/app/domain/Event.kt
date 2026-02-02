@@ -1,6 +1,5 @@
 package com.whereto.app.domain
 
-import com.whereto.app.dtos.PlaceResponse
 import com.whereto.utils.LocalDateTimeSerializer
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable

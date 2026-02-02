@@ -1,6 +1,6 @@
 package com.whereto
 
-import com.whereto.app.dtos.UserPrincipal
+import com.whereto.app.dtos.auth.UserPrincipal
 import com.whereto.app.repositories.UserRepository
 import io.ktor.server.application.*
 import io.ktor.server.auth.Authentication

@@ -1,8 +1,8 @@
 package com.whereto.app.services
 
 import com.whereto.app.domain.Place
-import com.whereto.app.dtos.CreatePlaceRequest
-import com.whereto.app.dtos.UpdatePlaceRequest
+import com.whereto.app.dtos.places.CreatePlaceRequest
+import com.whereto.app.dtos.places.UpdatePlaceRequest
 import com.whereto.app.repositories.PlaceRepository
 import io.ktor.server.plugins.NotFoundException
 import kotlinx.coroutines.Dispatchers

@@ -1,11 +1,11 @@
 package com.whereto.app.controllers
 
 import com.whereto.app.dtos.ApiResponse
-import com.whereto.app.dtos.CreatePlaceRequest
-import com.whereto.app.dtos.MultiplePlacesResponse
-import com.whereto.app.dtos.SinglePlaceResponse
-import com.whereto.app.dtos.UpdatePlaceRequest
-import com.whereto.app.dtos.toPlaceResponse
+import com.whereto.app.dtos.places.CreatePlaceRequest
+import com.whereto.app.dtos.places.MultiplePlacesResponse
+import com.whereto.app.dtos.places.SinglePlaceResponse
+import com.whereto.app.dtos.places.UpdatePlaceRequest
+import com.whereto.app.dtos.places.toPlaceResponse
 import com.whereto.app.services.PlaceService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.request.receive

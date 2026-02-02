@@ -1,8 +1,8 @@
 package com.whereto.app.controllers
 
 import com.whereto.app.dtos.ApiResponse
-import com.whereto.app.dtos.LoginRequest
-import com.whereto.app.dtos.LoginResponse
+import com.whereto.app.dtos.auth.LoginRequest
+import com.whereto.app.dtos.auth.LoginResponse
 import com.whereto.app.services.SessionService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.request.receive

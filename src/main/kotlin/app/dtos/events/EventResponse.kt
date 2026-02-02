@@ -1,4 +1,4 @@
-package com.whereto.app.dtos
+package com.whereto.app.dtos.events
 
 import com.whereto.app.domain.Event
 import kotlinx.serialization.Serializable

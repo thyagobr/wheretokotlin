@@ -1,4 +1,4 @@
-package com.whereto.app.dtos
+package com.whereto.app.dtos.auth
 
 import kotlinx.serialization.Serializable
 

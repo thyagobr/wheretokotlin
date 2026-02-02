@@ -1,9 +1,9 @@
 package com.whereto.app.controllers
 
 import com.whereto.app.dtos.ApiResponse
-import com.whereto.app.dtos.EventResponse
-import com.whereto.app.dtos.SingleEventResponse
-import com.whereto.app.dtos.UserPrincipal
+import com.whereto.app.dtos.events.EventResponse
+import com.whereto.app.dtos.events.SingleEventResponse
+import com.whereto.app.dtos.auth.UserPrincipal
 import com.whereto.app.dtos.events.CreateEventRequest
 import com.whereto.app.dtos.events.UpdateEventRequest
 import com.whereto.app.services.EventService
