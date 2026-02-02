@@ -3,22 +3,18 @@ package com.whereto.app.repositories
 import com.whereto.db.tables.Events
 import com.whereto.app.domain.Event
 import com.whereto.app.domain.Place
-import com.whereto.app.dtos.PlaceResponse
+import com.whereto.app.dtos.events.CreateEventRequest
+import com.whereto.app.dtos.events.UpdateEventRequest
 import com.whereto.db.tables.Places
-import com.whereto.utils.LocalDateTimeSerializer
 import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.internal.throwMissingFieldException
 import org.jetbrains.exposed.v1.core.ResultRow
-import org.jetbrains.exposed.v1.core.dao.id.EntityID
-import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.select
+import org.jetbrains.exposed.v1.jdbc.update
 
 class EventRepository {
     fun findAllByPlaceId(placeId: Int): List<Event> = transaction {
@@ -42,20 +38,6 @@ class EventRepository {
             .map { row -> buildEventFromRow(row) }
             .singleOrNull()
     }
-
-    @Serializable
-    data class CreateEventRequest(
-        val name: String,
-        val placeId: Int,
-        val description: String,
-        val link: String? = null,
-        val public: Boolean = false,
-        val userId: Int? = null,
-        @Serializable(with = LocalDateTimeSerializer::class)
-        val startsAt: LocalDateTime,
-        @Serializable(with = LocalDateTimeSerializer::class)
-        val endsAt: LocalDateTime?
-    )
 
     fun create(eventRequest: CreateEventRequest): Event? = transaction {
         if (eventRequest.userId == null) {
@@ -88,6 +70,23 @@ class EventRepository {
                 updatedAt = now
             )
         }
+    }
+
+    fun update(id: Int, params: UpdateEventRequest): Event? = transaction {
+        val now = Clock.System.now().toLocalDateTime(TimeZone.UTC)
+        val updatedRows = Events.update(
+            where = { Events.id eq id }
+        ) {
+            params.name?.let { value -> it[Events.name] = value }
+            params.description?.let { value -> it[Events.description] = value }
+            //params.link?.let { value -> it[Events.link] = value }
+            params.public?.let { value -> it[Events.public] = value }
+            params.startsAt?.let { value -> it[Events.startsAt] = value }
+            params.endsAt?.let { value -> it[Events.endsAt] = value }
+            it[updatedAt] = now
+        }
+
+        if (updatedRows == 0) null else findById(id)
     }
 
     private fun buildEventFromRow(row: ResultRow): Event {

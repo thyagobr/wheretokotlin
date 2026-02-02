@@ -1,6 +1,8 @@
 package com.whereto.app.services
 
 import com.whereto.app.domain.Event
+import com.whereto.app.dtos.events.CreateEventRequest
+import com.whereto.app.dtos.events.UpdateEventRequest
 import com.whereto.app.repositories.EventRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -21,8 +23,13 @@ class EventService(private val repository: EventRepository) {
             repository.findById(id)
         }
 
-    suspend fun create(eventParams: EventRepository.CreateEventRequest): Event? =
+    suspend fun create(eventParams: CreateEventRequest): Event? =
         withContext(Dispatchers.IO) {
             repository.create(eventParams)
+        }
+
+    suspend fun update(id: Int, eventParams: UpdateEventRequest): Event? =
+        withContext(Dispatchers.IO) {
+            repository.update(id, eventParams)
         }
 }
