@@ -10,4 +10,5 @@ interface PlaceService {
     suspend fun createPlace(placeParams: CreatePlaceRequest): Place
     suspend fun updatePlace(id: Int, placeParams: UpdatePlaceRequest): Place
     suspend fun deletePlace(id: Int): Boolean
+    suspend fun searchAddress(query: String): List<OpenMapsClient.OpenMapResult>
 }

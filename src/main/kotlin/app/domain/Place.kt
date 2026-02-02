@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Place(
-    val id: Int? = null,
+    val id: Int,
     val name: String,
     val address: String,
     val city: String,

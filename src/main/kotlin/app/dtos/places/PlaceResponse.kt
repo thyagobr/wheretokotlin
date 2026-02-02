@@ -1,8 +1,8 @@
 package com.whereto.app.dtos.places
 
 import com.whereto.app.domain.Place
-import com.whereto.app.dtos.TagResponse
-import com.whereto.app.dtos.toTagResponse
+import com.whereto.app.dtos.tags.TagResponse
+import com.whereto.app.dtos.tags.toTagResponse
 import kotlinx.serialization.Serializable
 
 /**

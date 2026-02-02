@@ -6,6 +6,7 @@ import com.whereto.app.dtos.places.MultiplePlacesResponse
 import com.whereto.app.dtos.places.SinglePlaceResponse
 import com.whereto.app.dtos.places.UpdatePlaceRequest
 import com.whereto.app.dtos.places.toPlaceResponse
+import com.whereto.app.services.OpenMapsClient
 import com.whereto.app.services.PlaceService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.request.receive
@@ -72,6 +73,19 @@ class PlaceController(private val service: PlaceService) {
                         true -> call.respond(HttpStatusCode.OK)
                         false -> call.respond(HttpStatusCode.NotFound)
                     }
+                }
+
+                get("search_address") {
+                    val name = call.request.queryParameters["name"]
+                    val city = call.request.queryParameters["city"]
+                    val country = call.request.queryParameters["country"]
+                    val query = "$name $city, $country"
+                    val address = service.searchAddress(query).first()
+                    call.respond(
+                        ApiResponse(
+                            data = address
+                        )
+                    )
                 }
             }
         }

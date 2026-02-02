@@ -1,14 +1,24 @@
 package com.whereto.app.services
 
 import com.whereto.app.domain.Place
+import com.whereto.app.domain.Tag
+import com.whereto.app.domain.TaggableType
 import com.whereto.app.dtos.places.CreatePlaceRequest
 import com.whereto.app.dtos.places.UpdatePlaceRequest
 import com.whereto.app.repositories.PlaceRepository
+import com.whereto.app.repositories.TagRepository
+import com.whereto.db.tables.Tags.taggableType
 import io.ktor.server.plugins.NotFoundException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
-class PlaceServiceImpl(private val repository: PlaceRepository): PlaceService {
+class PlaceServiceImpl(
+    private val repository: PlaceRepository,
+    private val tagRepository: TagRepository,
+): PlaceService {
 
     override suspend fun getAllPlaces(): List<Place> =
         withContext(Dispatchers.IO) {
@@ -26,13 +36,13 @@ class PlaceServiceImpl(private val repository: PlaceRepository): PlaceService {
 
     override suspend fun createPlace(placeParams: CreatePlaceRequest): Place {
         val createdPlace = withContext(Dispatchers.IO) {
-            val place = Place(
-                name = placeParams.name,
-                address = placeParams.address,
-                city = placeParams.city,
-                country = placeParams.country,
-            )
-            repository.create(place)
+            val now = Clock.System.now().toLocalDateTime(TimeZone.UTC)
+            val newPlace = repository.create(placeParams)
+            placeParams.tags.forEach { tagParam ->
+                tagRepository.create(tagParam, newPlace, newPlace.id)
+            }
+            // Refetch with all tags loaded
+            repository.findById(newPlace.id)
         }
 
         return createdPlace
@@ -59,5 +69,19 @@ class PlaceServiceImpl(private val repository: PlaceRepository): PlaceService {
         }
 
         return result
+    }
+
+    override suspend fun searchAddress(query: String): List<OpenMapsClient.OpenMapResult> {
+        val results = withContext(Dispatchers.IO) {
+            val client: MapsClient = OpenMapsClient(
+                apiKey = "API_KEY",
+            )
+
+            client.searchAddress(
+                query = query,
+            )
+        }
+
+        return results
     }
 }

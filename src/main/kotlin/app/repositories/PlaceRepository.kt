@@ -2,7 +2,7 @@ package com.whereto.app.repositories
 
 import com.whereto.app.domain.Place
 import com.whereto.app.domain.Tag
-import com.whereto.app.dtos.TagResponse
+import com.whereto.app.dtos.places.CreatePlaceRequest
 import com.whereto.db.tables.Places
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -62,22 +62,26 @@ class PlaceRepository {
         )
     }
 
-    fun create(place: Place): Place {
+    fun create(placeParams: CreatePlaceRequest): Place {
         val now = Clock.System.now().toLocalDateTime(TimeZone.UTC)
         val placeId = transaction {
             val id = Places.insert {
-                it[name] = place.name
-                it[address] = place.address
-                it[city] = place.city
-                it[country] = place.country
+                it[name] = placeParams.name
+                it[address] = placeParams.address
+                it[city] = placeParams.city
+                it[country] = placeParams.country
                 it[createdAt] = now
                 it[updatedAt] = now
             } get Places.id
             id.value
         }
 
-        return place.copy(
+        return Place(
             id = placeId,
+            name = placeParams.name,
+            address = placeParams.address,
+            city = placeParams.city,
+            country = placeParams.country,
             createdAt = now,
             updatedAt = now
         )
