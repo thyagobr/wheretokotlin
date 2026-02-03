@@ -5,6 +5,7 @@ import com.whereto.app.repositories.UserRepository
 import io.ktor.server.application.*
 import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.bearer
+import com.whereto.app.domain.Role
 
 fun Application.configureAuthentication(userRepository: UserRepository) {
     install(Authentication) {
@@ -18,7 +19,8 @@ fun Application.configureAuthentication(userRepository: UserRepository) {
 
                 UserPrincipal(
                     userId = user.id,
-                    token = token
+                    token = token,
+                    role = user.role ?: Role.USER.name
                 )
             }
         }

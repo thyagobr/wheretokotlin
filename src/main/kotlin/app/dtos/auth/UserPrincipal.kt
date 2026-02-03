@@ -2,5 +2,6 @@ package com.whereto.app.dtos.auth
 
 data class UserPrincipal(
     val userId: Int,
-    val token: String
+    val token: String,
+    val role: String,
 )

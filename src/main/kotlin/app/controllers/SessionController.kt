@@ -17,13 +17,17 @@ class SessionController(private val service: SessionService) {
         route.route("/auth/login") {
             post {
                 val request = call.receive<LoginRequest>()
-                val token = service.authenticate(request.email, request.password)
-
-                if (token != null) {
-                    call.respond(HttpStatusCode.OK, ApiResponse(LoginResponse(token)))
-                } else {
-                    call.respond(HttpStatusCode.Forbidden)
-                }
+                val user = service.authenticate(request.email, request.password) ?: return@post call.respond(HttpStatusCode.Forbidden)
+                call.respond(
+                    HttpStatusCode.OK,
+                    ApiResponse(
+                        LoginResponse(
+                            token = user.token,
+                            role = user.role,
+                            userId = user.id
+                        )
+                    )
+                )
             }
         }
     }
