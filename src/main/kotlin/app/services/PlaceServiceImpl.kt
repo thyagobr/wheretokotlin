@@ -5,6 +5,7 @@ import com.whereto.app.domain.Tag
 import com.whereto.app.domain.TaggableType
 import com.whereto.app.dtos.places.CreatePlaceRequest
 import com.whereto.app.dtos.places.UpdatePlaceRequest
+import com.whereto.app.dtos.tags.TagRequest
 import com.whereto.app.repositories.PlaceRepository
 import com.whereto.app.repositories.TagRepository
 import com.whereto.db.tables.Tags.taggableType
@@ -50,14 +51,7 @@ class PlaceServiceImpl(
 
     override suspend fun updatePlace(id: Int, placeParams: UpdatePlaceRequest): Place {
         val place = withContext(Dispatchers.IO) {
-            val existingPlace = repository.findById(id) ?: throw NotFoundException("Place not found")
-            val updatedPlace = existingPlace.copy(
-                name = placeParams.name ?: existingPlace.name,
-                address = placeParams.address ?: existingPlace.address,
-                city = placeParams.city ?: existingPlace.city,
-                country = placeParams.country ?: existingPlace.country
-            )
-            repository.update(updatedPlace)
+            repository.update(id, placeParams)
         }
 
         return place

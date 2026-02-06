@@ -3,14 +3,20 @@ package com.whereto.app.repositories
 import com.whereto.app.domain.Place
 import com.whereto.app.domain.Tag
 import com.whereto.app.dtos.places.CreatePlaceRequest
+import com.whereto.app.dtos.places.UpdatePlaceRequest
 import com.whereto.db.tables.Places
+import com.whereto.db.tables.Tags
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import io.ktor.server.plugins.NotFoundException
+import org.jetbrains.exposed.v1.core.ResultRow
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.deleteWhere
 import org.jetbrains.exposed.v1.jdbc.insert
+import org.jetbrains.exposed.v1.jdbc.select
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.jetbrains.exposed.v1.jdbc.update
@@ -87,19 +93,41 @@ class PlaceRepository {
         )
     }
 
-    fun update(place: Place): Place = transaction {
+    fun update(id: Int, placeParams: UpdatePlaceRequest): Place = transaction {
         val now = Clock.System.now().toLocalDateTime(TimeZone.UTC)
-        Places.update({ Places.id eq place.id!! }) {
-            it[name] = place.name
-            it[address] = place.address
-            it[city] = place.city
-            it[country] = place.country
+        // Find the tags for the Place, delete all and recreate from payload
+        val tags = mutableListOf<Tag>()
+        Tags.deleteWhere { (Tags.taggableId eq id) and (Tags.taggableType eq "Place") }
+        placeParams.tags.forEach { tag ->
+            val newTag = TagRepository().create(tag, "Place", id)
+            if (newTag !== null) tags.add(newTag)
+        }
+
+        Places.update({ Places.id eq id }) {
+            it[name] = placeParams.name
+            it[address] = placeParams.address
+            it[city] = placeParams.city
+            it[country] = placeParams.country
             it[updatedAt] = now
         }
-        place.copy(updatedAt = now)
+
+        Places.selectAll().where { Places.id eq id }.map { buildPlace(it, tags) }.single()
     }
 
     fun delete(id: Int): Boolean = transaction {
         (Places.deleteWhere { Places.id eq id } > 0)
+    }
+
+    private fun buildPlace(row: ResultRow, tags: List<Tag>): Place {
+        return Place(
+            id = row[Places.id].value,
+            name = row[Places.name],
+            address = row[Places.address],
+            city = row[Places.city],
+            country = row[Places.country],
+            createdAt = row[Places.createdAt],
+            updatedAt = row[Places.updatedAt],
+            tags = tags
+        )
     }
 }

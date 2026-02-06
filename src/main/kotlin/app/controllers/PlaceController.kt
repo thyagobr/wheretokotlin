@@ -18,6 +18,7 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import io.ktor.server.auth.authenticate
+import io.ktor.server.routing.patch
 
 class PlaceController(private val service: PlaceService) {
     fun registerRoutes(route: Route) {
@@ -56,9 +57,12 @@ class PlaceController(private val service: PlaceService) {
                     )
                 }
 
-                put("{id}") {
-                    val id = call.parameters["id"]?.toIntOrNull() ?: return@put call.respond(HttpStatusCode.BadRequest)
+                patch("{id}") {
+                    println("We're in patch")
+                    val id = call.parameters["id"]?.toIntOrNull() ?: return@patch call.respond(HttpStatusCode.BadRequest)
+                    println("ID is $id")
                     val placeParams = call.receive<UpdatePlaceRequest>()
+                    println("Place params: $placeParams")
                     val place = service.updatePlace(id, placeParams)
                     call.respond(
                         ApiResponse(

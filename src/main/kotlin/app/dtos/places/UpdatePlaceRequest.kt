@@ -1,11 +1,14 @@
 package com.whereto.app.dtos.places
 
+import com.whereto.app.dtos.tags.TagRequest
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class UpdatePlaceRequest(
-    val name: String? = null,
-    val address: String? = null,
-    val city: String? = null,
-    val country: String? = null
+    val id: Int? = null,
+    val name: String,
+    val address: String,
+    val city: String,
+    val country: String,
+    val tags: List<TagRequest>,
 )
