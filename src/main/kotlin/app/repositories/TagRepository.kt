@@ -56,8 +56,8 @@ class TagRepository {
     fun create(tagParams: TagRequest, taggable: Any, newTaggableId: Int): Tag? = transaction {
         val now = Clock.System.now().toLocalDateTime(TimeZone.UTC)
         val newTaggableType = when(taggable) {
-            is Place -> TaggableType.Place.name
-            is Event -> TaggableType.Event.name
+            is Place, "Place" -> TaggableType.Place.name
+            is Event, "Event" -> TaggableType.Event.name
             else -> throw IllegalArgumentException("Unknown taggable type: $taggableType")
         }
         Tags.insert {
