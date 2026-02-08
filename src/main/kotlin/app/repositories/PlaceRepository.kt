@@ -4,6 +4,7 @@ import com.whereto.app.domain.Place
 import com.whereto.app.domain.Tag
 import com.whereto.app.dtos.places.CreatePlaceRequest
 import com.whereto.app.dtos.places.UpdatePlaceRequest
+import com.whereto.db.tables.Events
 import com.whereto.db.tables.Places
 import com.whereto.db.tables.Tags
 import kotlinx.datetime.Clock
@@ -115,6 +116,8 @@ class PlaceRepository {
     }
 
     fun delete(id: Int): Boolean = transaction {
+        Tags.deleteWhere { (Tags.taggableId eq id) and (Tags.taggableType eq "Place") }
+        Events.deleteWhere { Events.placeId eq id }
         (Places.deleteWhere { Places.id eq id } > 0)
     }
 
