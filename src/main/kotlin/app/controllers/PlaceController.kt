@@ -84,10 +84,10 @@ class PlaceController(private val service: PlaceService) {
                     val city = call.request.queryParameters["city"]
                     val country = call.request.queryParameters["country"]
                     val query = "$name $city, $country"
-                    val address = service.searchAddress(query).first()
+                    val addresses = service.searchAddress(query)
                     call.respond(
                         ApiResponse(
-                            data = address
+                            data = addresses
                         )
                     )
                 }
