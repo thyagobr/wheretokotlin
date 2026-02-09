@@ -3,6 +3,7 @@ package com.whereto
 import com.whereto.app.controllers.EventController
 import com.whereto.app.controllers.PlaceController
 import com.whereto.app.controllers.SessionController
+import com.whereto.app.controllers.WebsocketController
 import com.whereto.app.repositories.EventRepository
 import com.whereto.app.repositories.PlaceRepository
 import com.whereto.app.repositories.TagRepository
@@ -33,6 +34,8 @@ fun Application.configureFrameworks() {
             single { SessionController(get()) }
 
             single { TagRepository() }
+
+            single { WebsocketController() }
         })
     }
 }

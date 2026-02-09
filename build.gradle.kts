@@ -19,6 +19,7 @@ dependencies {
     implementation("io.ktor:ktor-server-cors")
     implementation("io.ktor:ktor-server-call-logging")
     implementation("io.ktor:ktor-client-cio:2.3.4")
+    implementation("io.ktor:ktor-server-websockets")
     implementation(libs.koin.logger.slf4j)
     implementation(libs.ktor.server.netty)
     implementation(libs.logback.classic)

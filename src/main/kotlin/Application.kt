@@ -4,6 +4,7 @@ import com.whereto.app.repositories.UserRepository
 import com.whereto.db.DatabaseFactory
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
+import io.ktor.server.websocket.WebSockets
 import io.ktor.server.application.*
 import io.ktor.server.plugins.cors.routing.CORS
 import org.koin.ktor.ext.inject
@@ -42,6 +43,7 @@ fun Application.module() {
     configureSerialization()
     val userRepository: UserRepository by inject()
     configureAuthentication(userRepository)
+    install(WebSockets)
     configureRouting()
 
     install(CallLogging)
